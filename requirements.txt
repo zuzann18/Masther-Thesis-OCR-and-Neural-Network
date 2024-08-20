@@ -1,0 +1,10 @@
+tensorflow
+pandas
+matplotlib
+pillow
+seaborn
+scikit-learn
+pathlib
+numpy
+keras-tuner
+datasets
