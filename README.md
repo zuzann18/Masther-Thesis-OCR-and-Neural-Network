@@ -28,14 +28,11 @@ Głównym elementem mojej pracy jest projektowanie, implementacja i trening siec
 - Rozdział II: Opis realizacji modeli SSN, w tym wyboru architektury i procesu treningu.
 - Rozdział III: Prezentacja i analiza wyników rozpoznawania znaków na różnych matrycach oraz pisma odręcznego.
 - Rozdział IV: Dyskusja nad potencjalnymi korzyściami biznesowymi wynikającymi z zastosowania SSN w rozpoznawaniu pisma ręcznego i wnioski końcowe.
-
-matryce znaków bedą robione w gimpie.  Praca w pythonie. 
+Praca w pythonie. 
 
 # Todo
-- data processing
+
 - train models
-  - model_architectures.py
-  - run_experiment.py
   - config_experiment
   - saving the results & models
 - visualization/reporting
@@ -52,14 +49,9 @@ python download_data.py
 
 https://keras.io/api/applications/
 
-Accuracy
-F1Score
 
 script_train -> (test_results) CSV -> Visulaization.ipynb -> JPG -> Report.md
 `keras.callback.CSVLogger`
 CSV:
 ```
-epoka,  nazwa modelu,  wynik na zbiorze testowym i treningowym (accuracy, f1score, loss)
-1,LeNet3,0.98,0.99,0.01
-2,LeNet3,0.98,0.99,0.01
-```
+
