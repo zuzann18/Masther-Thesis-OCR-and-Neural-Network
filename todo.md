@@ -104,11 +104,12 @@
 
 - [] sprawdzic jaka wartość po 60 epokach dla learning_rate_scheduler
 - [] dodać tensorboard
-- [] zacząć opisywać eksperymenty w pracy magisterskiej
+- [] zacząć opisywać eksperymenty w pracy magisterskiej z droputem
+- raport md
 
 # check
 
-- [x] experimental_config - jak z obrotami: Dowiemy się później.
+- [x] experimental_config - jak z obrotami:
 - [] sprawdzić czy tmp_images.npy i tmp_labels.npy, które są luzem są potrzebne
 - []VGG16 model requires an input size of at least 32x32, but the provided input shape is 28x28. - czy da się w tym
   przykładzie zorbić transfwer learning ?
@@ -116,3 +117,6 @@
  gdyby dać 4, albo coś takiego ? 
 - [] znaleźć jakieś rozszerzenie dla czytania wygodniejszeco csv
 - [] visualizing one experiment per time - nie działa
+- [] Identify the Problem: The error indicates that the CSV file results/runs_history.csv has inconsistent row lengths,
+  with some rows having more fields than expected.
+- [] run_all_experiment - nie działa
