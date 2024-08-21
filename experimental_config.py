@@ -498,6 +498,30 @@ EXPERIMENTAL_CONFIG = [
         "shear_range": 0.15,
         "optimizer": "adadelta"
     },
+
+    {
+        "experiment_id": 73,
+        "model_name": "CNN4",
+        "dropout_rate": 0.4,  # Reduced dropout rate for stability
+        "augmentation": True,
+        "zoom_range": 0.1,  # Tuned augmentation for more controlled variability
+        "rotation_range": 4,
+        "width_shift_range": 0.1,
+        "height_shift_range": 0.1,
+        "shear_range": 0.1,
+    },
+    # New Experiment 70
+    {
+        "experiment_id": 74,
+        "model_name": "CNN4",
+        "dropout_rate": 0.3,  # Lower dropout rate for comparison
+        "augmentation": True,
+        "zoom_range": 0.15,  # Slightly increased augmentation
+        "rotation_range": 10,
+        "width_shift_range": 0.2,
+        "height_shift_range": 0.2,
+        "shear_range": 0.15,
+    },
 ]
     # {
     #     "experiment_id": 43,
