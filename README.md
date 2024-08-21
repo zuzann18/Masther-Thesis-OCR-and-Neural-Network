@@ -30,11 +30,10 @@ Głównym elementem mojej pracy jest projektowanie, implementacja i trening siec
 - Rozdział IV: Dyskusja nad potencjalnymi korzyściami biznesowymi wynikającymi z zastosowania SSN w rozpoznawaniu pisma ręcznego i wnioski końcowe.
 Praca w pythonie. 
 
-# Todo
+## Todo
 
 - train models
   - config_experiment
-  - saving the results & models
 - visualization/reporting
 script_train -> (test_results) CSV -> Visulaization.ipynb -> JPG -> Report.md keras.callback.CSVLogger CSV:
 ```bash
