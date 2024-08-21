@@ -4,8 +4,8 @@ Temat pracy :
 "Analiza ropoznawania liter za pomocą sztucznych sieci neuronowych" 
 
 Celem pracy będzie rozpoznanie za pomocą Sztucznej sieci Neuronowej: 
-1)	liter utworzonych na matrycach 28 pikseli x 28 pikseli - do zbirou testwowego 
-2)	liter z bazy danych https://huggingface.co/datasets/pittawat/letter_recognition - do zbioru treningowego 
+1)	liter utworzonych na matrycach 28 pikseli x 28 pikseli -  są wykorzystawane do zbirou testowego 
+2)	liter z bazy danych https://huggingface.co/datasets/pittawat/letter_recognition - są wykorzystywane do zbioru treningowego 
 
 1. **Opis problemu**:
 Moja praca magisterska koncentruje się na rozpoznawaniu wzorców znaków przy użyciu sztucznych sieci neuronowych (SSN). Zajmuję się opracowaniem i treningiem modeli SSN zdolnych do identyfikacji liter utworzonych na matrycach o różnych rozmiarach, a także rozpoznawaniem pisma odręcznego. Problemem biznesowym, który ten model ma rozwiązać, jest potrzeba efektywnego i automatycznego przetwarzania informacji wizualnych na dane cyfrowe, które mogą być łatwo przeszukiwane i analizowane przez systemy komputerowe.
