@@ -36,7 +36,7 @@ Praca w pythonie.
   - config_experiment
   - saving the results & models
 - visualization/reporting
-
+script_train -> (test_results) CSV -> Visulaization.ipynb -> JPG -> Report.md keras.callback.CSVLogger CSV:
 ```bash
 python -m run_experiment --id 2
 ```
@@ -49,9 +49,4 @@ python download_data.py
 
 https://keras.io/api/applications/
 
-
-script_train -> (test_results) CSV -> Visulaization.ipynb -> JPG -> Report.md
-`keras.callback.CSVLogger`
-CSV:
-```
 
