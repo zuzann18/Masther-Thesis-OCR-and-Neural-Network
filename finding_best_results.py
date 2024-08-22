@@ -1,97 +1,105 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from models import get_model
 
-# Directory containing the result files
-results_dir = 'results'
-# Directory to save the best_results_visualizations
-visualizations_dir = 'best_results_visualizations'
-os.makedirs(visualizations_dir, exist_ok=True)
 
-# List to store the results
-results = []
+def find_latest_history_csv(results_dir):
+    csv_files = [f for f in os.listdir(results_dir) if f.startswith('training_history') and f.endswith('.csv')]
+    latest_file = max(csv_files, key=lambda x: os.path.getctime(os.path.join(results_dir, x)))
+    return os.path.join(results_dir, latest_file)
 
-# Iterate through all files in the directory
-for filename in os.listdir(results_dir):
-    if filename.endswith('.csv'):
-        file_path = os.path.join(results_dir, filename)
-        try:
-            if os.path.getsize(file_path) > 0:  # Check if the file is not empty
-                df = pd.read_csv(file_path)
-                # Extract accuracy and loss columns
-                if 'accuracy' in df.columns and 'loss' in df.columns:
-                    train_accuracy = df['accuracy'].tolist()
-                    test_accuracy = df['val_accuracy'].tolist()
-                    train_loss = df['loss'].tolist()
-                    test_loss = df['val_loss'].tolist()
-                    results.append({
-                        'filename': filename,
-                        'train_accuracy': train_accuracy,
-                        'test_accuracy': test_accuracy,
-                        'train_loss': train_loss,
-                        'test_loss': test_loss
-                    })
-            else:
-                print(f"Skipping empty file: {file_path}")
-        except pd.errors.EmptyDataError:
-            print(f"Skipping file due to EmptyDataError: {file_path}")
-        except Exception as e:
-            print(f"An error occurred while processing {file_path}: {e}")
+
+def generate_plots(history_df, output_dir):
+    metrics = ['accuracy', 'val_accuracy', 'loss', 'val_loss']
+    for metric in metrics:
+        plt.figure(figsize=(10, 5))
+        plt.plot(history_df[metric])
+        plt.title(f'Model {metric}')
+        plt.ylabel(metric)
+        plt.xlabel('Epoch')
+        plt.legend(['Train', 'Validation'] if 'val' in metric else ['Train'], loc='upper left')
+        plot_path = f'{output_dir}/{metric}_plot.jpg'
+        plt.savefig(plot_path)
+        plt.close()
+
+
+def find_best_results(runs_history_df):
+    best_run = runs_history_df.loc[runs_history_df['best_val_accuracy'].idxmax()]
+    return best_run
+
+
+def generate_report(output_dir):
+    try:
+        runs_history_df = pd.read_csv('results/runs_history.csv')
+    except pd.errors.ParserError as e:
+        print(f"Error reading CSV file: {e}")
+        return
+    history_csv_file = find_latest_history_csv(output_dir)
+    print(f"Latest history CSV file: {history_csv_file}")
+
+    if not os.path.exists(history_csv_file):
+        raise FileNotFoundError(f"The file {history_csv_file} does not exist.")
+
+    history_df = pd.read_csv(history_csv_file)
+    generate_plots(history_df, output_dir)
+
+    runs_history_df = pd.read_csv('results/runs_history.csv')
+    print(f"Entries in runs_history.csv:\n{runs_history_df}")
+
+    matching_rows = runs_history_df[runs_history_df['history_csv_file'] == history_csv_file]
+    if not matching_rows.empty:
+        run_details = matching_rows.iloc[0]
     else:
-        print(f"File not found: {file_path}")
+        raise ValueError(f"No matching entry found for {history_csv_file} in runs_history.csv")
 
-# Sort results by highest test accuracy and lowest test loss
-sorted_by_test_accuracy = sorted(results, key=lambda x: max(x['test_accuracy']), reverse=True)[:3]
-sorted_by_test_loss = sorted(results, key=lambda x: min(x['test_loss']))[:3]
+    best_run = find_best_results(runs_history_df)
 
-# Print the top 3 highest test accuracy
-print("Top 3 Highest Test Accuracy:")
-for result in sorted_by_test_accuracy:
-    print(f"File: {result['filename']}")
-    print(f"Test Accuracy: {result['test_accuracy']}")
-    print()
+    # Extract model architecture
+    model = get_model(
+        model_name=run_details['model_name'],
+        dropout_rate=run_details['dropout_rate'],
+        learning_rate=run_details['learning_rate'],
+        optimizer=run_details['optimizer'],
+        augmentation=run_details['augmentation'],
+        num_layers=run_details['num_layers']
+    )
+    model_summary = []
+    model.summary(print_fn=lambda x: model_summary.append(x))
+    model_summary_str = "\n".join(model_summary)
 
-# Print the top 3 lowest test loss
-print("Top 3 Lowest Test Loss:")
-for result in sorted_by_test_loss:
-    print(f"File: {result['filename']}")
-    print(f"Test Loss: {result['test_loss']}")
-    print()
+    report_content = f"""
+# Experiment Report
+
+## Parameters
+- **Experiment ID**: {run_details['experiment_id']}
+- **Timestamp**: {run_details['timestamp']}
+- **Model Name**: {run_details['model_name']}
+- **Epochs**: {run_details['epochs']}
+- **Batch Size**: {run_details['batch_size']}
+- **Dropout Rate**: {run_details['dropout_rate']}
+- **Learning Rate**: {run_details['learning_rate']}
+- **Optimizer**: {run_details['optimizer']}
+- **Augmentation**: {run_details['augmentation']}
+  - **Zoom Range**: {run_details['zoom_range']}
+  - **Rotation Range**: {run_details['rotation_range']}
+  - **Width Shift Range**: {run_details['width_shift_range']}
+  - **Height Shift Range**: {run_details['height_shift_range']}
+  - **Shear Range**: {run_details['shear_range']}
+- **Number of Layers**: {run_details['num_layers']}
+- **Total Seconds**: {run_details['total_seconds']}
+
+## Model Architecture
+    
+    {model_summary_str}
+    
+"""
+
+    with open(f'{output_dir}/Report.md', 'w') as report_file:
+        report_file.write(report_content)
+    print("`runs_history.csv` not found. Skipping report generation.")
 
 
-# Function to plot and save best_results_visualizations
-def plot_accuracy(result, metric, index):
-    plt.figure(figsize=(10, 5))
-    plt.plot(result['train_accuracy'], label='Train Accuracy')
-    plt.plot(result['test_accuracy'], label='Test Accuracy')
-    plt.title(f"File: {result['filename']} - Top {metric}")
-    plt.xlabel('Epoch')
-    plt.ylabel('Value')
-    plt.legend()
-    plt.grid(True)
-    plt_path = os.path.join(visualizations_dir, f"{metric}_{index}_{result['filename']}.png")
-    plt.savefig(plt_path)
-    plt.show()
-
-
-def plot_loss(result, metric, index):
-    plt.figure(figsize=(10, 5))
-    plt.plot(result['train_loss'], label='Train Loss')
-    plt.plot(result['test_loss'], label='Test Loss')
-    plt.title(f"File: {result['filename']} - Top {metric}")
-    plt.xlabel('Epoch')
-    plt.ylabel('Value')
-    plt.legend()
-    plt.grid(True)
-    plt_path = os.path.join(visualizations_dir, f"{metric}_{index}_{result['filename']}.png")
-    plt.savefig(plt_path)
-    plt.show()
-
-
-# Visualize and save the top 3 highest test accuracy
-for index, result in enumerate(sorted_by_test_accuracy):
-    plot_accuracy(result, 'Test Accuracy', index)
-
-# Visualize and save the top 3 lowest test loss
-for index, result in enumerate(sorted_by_test_loss):
-    plot_loss(result, 'Test Loss', index)
+# Example usage
+output_dir = 'results'
+generate_report(output_dir)

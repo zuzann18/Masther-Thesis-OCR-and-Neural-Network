@@ -5,13 +5,15 @@ import click
 import pandas as pd
 from keras.callbacks import CSVLogger
 from keras.src.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import LearningRateScheduler, TensorBoard
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from constants import RESULTS_PATH
 from data_processing import load_training_test_data
 from experimental_config import EXPERIMENTAL_CONFIG
 from models import get_model
-from tensorflow.keras.callbacks import LearningRateScheduler
+import os
+
 
 
 def lr_schedule(epoch, lr):
@@ -51,9 +53,12 @@ def run_experiment(
         height_shift_range=0.2,
         shear_range=0.2,
         learning_rate_scheduler=False,
+        num_layers=None
 ):
     print(f"{augmentation=}")
     print(f"{dropout_rate=}")
+    print(f"{experiment_id=}")
+    print(f"{model_name=}")
     # start measuring time
     start_time = datetime.now()
     train_images, test_images, train_labels, test_labels = load_training_test_data()
@@ -64,13 +69,16 @@ def run_experiment(
         learning_rate=learning_rate,
         optimizer=optimizer,
         augmentation=augmentation,
+        num_layers=num_layers if num_layers is not None else 5
     )
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     history_csv_file = RESULTS_PATH / f"training_history_{experiment_id}_{timestamp}.csv"
+    tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}"
 
     early_stopping = EarlyStopping(monitor='val_loss', patience=8)
     csv_logger = CSVLogger(history_csv_file)
+    tensorboard = TensorBoard(log_dir=tensorboard_log_dir)
     callbacks = [early_stopping, csv_logger]
 
     if learning_rate_scheduler:
@@ -133,6 +141,8 @@ def run_experiment(
         'best_train_loss': best_train_loss,
         'best_val_loss': best_val_loss,
         'history_csv_file': history_csv_file,
+        'num_layers': num_layers,
+        'tensorboard_log_dir': tensorboard_log_dir
     }
     result_path = RESULTS_PATH / f"runs_history.csv"
 
