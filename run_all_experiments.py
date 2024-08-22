@@ -2,7 +2,7 @@ import subprocess
 from experimental_config import EXPERIMENTAL_CONFIG
 
 
-def run_all_experiments(start_id=0, experiment_ids=None):
+def run_all_experiments(start_id=2, experiment_ids=None):
     if experiment_ids is not None:
         configs_to_run = [config for config in EXPERIMENTAL_CONFIG if config['experiment_id'] in experiment_ids]
     else:

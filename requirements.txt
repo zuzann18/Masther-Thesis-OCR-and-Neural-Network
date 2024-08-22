@@ -1,4 +1,5 @@
 tensorflow
+tensorboard
 pandas
 matplotlib
 pillow

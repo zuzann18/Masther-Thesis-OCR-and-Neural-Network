@@ -1,20 +1,17 @@
 import csv
 from datetime import datetime
-
 import click
 import pandas as pd
 from keras.callbacks import CSVLogger
 from keras.src.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import LearningRateScheduler, TensorBoard
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-
 from constants import RESULTS_PATH
 from data_processing import load_training_test_data
 from experimental_config import EXPERIMENTAL_CONFIG
 from models import get_model
 import os
-
-
+import subprocess
 
 def lr_schedule(epoch, lr):
     if epoch > 10:
@@ -37,6 +34,9 @@ def main(experiment_id, epochs):
     config['epochs'] = epochs
     run_experiment(**config)
 
+def run_tensorboard(logs_base_dir='results'):
+    print(f"Starting TensorBoard for logs in directory: {logs_base_dir}")
+    subprocess.Popen(['tensorboard', '--logdir', logs_base_dir])
 
 def run_experiment(
         experiment_id,
@@ -59,6 +59,7 @@ def run_experiment(
     print(f"{dropout_rate=}")
     print(f"{experiment_id=}")
     print(f"{model_name=}")
+
     # start measuring time
     start_time = datetime.now()
     train_images, test_images, train_labels, test_labels = load_training_test_data()
@@ -85,6 +86,9 @@ def run_experiment(
     # Ensure the directory exists or is created during the training process
     if not os.path.exists(tensorboard_log_dir):
         os.makedirs(tensorboard_log_dir)
+
+    # Start TensorBoard before model training
+    run_tensorboard(tensorboard_log_dir)
 
     if learning_rate_scheduler:
         lr_scheduler = LearningRateScheduler(lr_schedule)
@@ -120,7 +124,6 @@ def run_experiment(
         )
 
     pd.DataFrame(history.history).to_csv(history_csv_file, index=False)
-
 
     total_seconds = (datetime.now() - start_time).total_seconds()
     actual_epochs = len(history.history['loss'])
@@ -173,7 +176,6 @@ def run_experiment(
                 print(f"No log files found in '{log_dir}'.")
         else:
             print(f"Directory '{log_dir}' does not exist.")
-
 
 if __name__ == '__main__':
     main()

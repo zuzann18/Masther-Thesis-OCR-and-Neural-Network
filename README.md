@@ -30,7 +30,20 @@ Głównym elementem mojej pracy jest projektowanie, implementacja i trening siec
 - Rozdział IV: Dyskusja nad potencjalnymi korzyściami biznesowymi wynikającymi z zastosowania SSN w rozpoznawaniu pisma ręcznego i wnioski końcowe.
 Praca w pythonie. 
 
-## Todo
+##Uruchamianie Eksperymentów
+Eksperymenty można uruchomić za pomocą skryptu run_experiments.py. Przykładowe uruchomienie eksperymentu:
+
+python run_experiments.py --experiment_id 0 --epochs 10
+Po uruchomieniu skryptu, TensorBoard automatycznie uruchomi się i zapisze logi z treningu modelu w katalogu
+results/tensorboard_logs_{experiment_id}_{timestamp}.
+
+Monitorowanie Wyników z TensorBoard
+Uruchomienie TensorBoard
+Aby monitorować wyniki eksperymentów w czasie rzeczywistym, otwórz terminal i uruchom TensorBoard:
+
+tensorboard --logdir=results
+Po uruchomieniu TensorBoard, otwórz przeglądarkę internetową i przejdź do adresu http://localhost:6006/. Tam będziesz
+mógł zobaczyć wykresy i wizualizacje wyników, takie jak:
 
 # Run Experiments
 
