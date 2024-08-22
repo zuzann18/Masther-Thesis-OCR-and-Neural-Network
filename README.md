@@ -29,8 +29,15 @@ Głównym elementem mojej pracy jest projektowanie, implementacja i trening siec
 - Rozdział III: Prezentacja i analiza wyników rozpoznawania znaków na różnych matrycach oraz pisma odręcznego.
 - Rozdział IV: Dyskusja nad potencjalnymi korzyściami biznesowymi wynikającymi z zastosowania SSN w rozpoznawaniu pisma ręcznego i wnioski końcowe.
 Praca w pythonie. 
+-
 
-##Uruchamianie Eksperymentów
+# Download data
+
+```bash
+python download_data.py
+```
+
+# Uruchamianie Eksperymentów
 Eksperymenty można uruchomić za pomocą skryptu run_experiments.py. Przykładowe uruchomienie eksperymentu:
 
 python run_experiments.py --experiment_id 0 --epochs 10
@@ -46,10 +53,6 @@ Po uruchomieniu TensorBoard, otwórz przeglądarkę internetową i przejdź do a
 mógł zobaczyć wykresy i wizualizacje wyników, takie jak:
 
 # Run Experiments
-
-- run experiment
-- `python visualise_results.py`
-
 # DNN
 
 - [x] Experiment 0: `python run_experiments.py --experiment_id 0 --epochs 50`
@@ -119,9 +122,11 @@ mógł zobaczyć wykresy i wizualizacje wyników, takie jak:
 - Najprawdopodobniej kernel 5x5 jest za duży, sieć się nie uczy
 - `python run_experiments.py --experiment_id 9 --epochs 350`
 
-# Todo
+Best result
 
-- data processing
+![img.png](img.png)
+
+# Todo
 - train models
   - config_experiment
 - visualization/reporting
@@ -130,11 +135,7 @@ script_train -> (test_results) CSV -> Visulaization.ipynb -> JPG -> Report.md ke
 python -m run_experiment --id 2
 ```
 
-# Download data
 
-```bash
-python download_data.py
-```
 
 https://keras.io/api/applications/
 
