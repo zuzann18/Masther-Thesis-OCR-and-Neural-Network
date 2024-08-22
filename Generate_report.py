@@ -5,6 +5,12 @@ import datetime
 from keras.callbacks import EarlyStopping, TensorBoard
 
 
+def find_latest_tensorboard_log(logs_dir):
+    log_dirs = [f for f in os.listdir(logs_dir) if os.path.isdir(os.path.join(logs_dir, f))]
+    latest_dir = max(log_dirs, key=lambda x: os.path.getctime(os.path.join(logs_dir, x)))
+    return os.path.join(logs_dir, latest_dir)
+
+
 # Function to find the latest history CSV file
 def find_latest_history_csv(results_dir):
     csv_files = [f for f in os.listdir(results_dir) if f.startswith('training_history') and f.endswith('.csv')]
@@ -143,5 +149,12 @@ def generate_report(output_dir):
 
 
 # Example usage
+
 output_dir = 'results'
+logs_dir = 'logs/fit'
+
+tensorboard_log_dir = find_latest_tensorboard_log(logs_dir)
+
+tensorboard_callback = TensorBoard(log_dir=tensorboard_log_dir, histogram_freq=1)
+
 generate_report(output_dir)

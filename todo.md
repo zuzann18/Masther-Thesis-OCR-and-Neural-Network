@@ -99,10 +99,10 @@
 
 # Kolejność :  na początku bez augumentacji,maskowanie w celu generalizacji modelu, potem z augumentacją,
 
-# TO DO
+# TO DO-
 
-- [] dodać tensorboard, dlaczego nie widzę tensorboard log directory ?
-- [] co z tymi layers, jak mogę dodać budowę modelu z model do raportu
+- [] raport md zrobic zeby dziala
+- [x] co z tymi layers, jak mogę dodać budowę modelu z model do raportu
   -[] # ?Kolejność :  na początku bez augumentacji,maskowanie w celu generalizacji modelu, potem z augumentacją,
 
 - [] sprawdzic jaka wartość po 60 epokach dla learning_rate_scheduler
@@ -122,4 +122,4 @@
 - [] visualizing one experiment per time - nie działa
 - [] Identify the Problem: The error indicates that the CSV file results/runs_history.csv has inconsistent row lengths,
   with some rows having more fields than expected.
-- [] run_all_experiment - nie działa
+

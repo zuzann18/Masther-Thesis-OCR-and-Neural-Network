@@ -75,7 +75,7 @@ def run_experiment(
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     history_csv_file = RESULTS_PATH / f"training_history_{experiment_id}_{timestamp}.csv"
-    tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}"
+    tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}.csv"
 
     # Initialize callbacks
     early_stopping = EarlyStopping(monitor='val_loss', patience=8)
