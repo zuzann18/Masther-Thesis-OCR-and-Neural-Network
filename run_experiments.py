@@ -76,10 +76,15 @@ def run_experiment(
     history_csv_file = RESULTS_PATH / f"training_history_{experiment_id}_{timestamp}.csv"
     tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}"
 
+    # Initialize callbacks
     early_stopping = EarlyStopping(monitor='val_loss', patience=8)
     csv_logger = CSVLogger(history_csv_file)
     tensorboard = TensorBoard(log_dir=tensorboard_log_dir)
-    callbacks = [early_stopping, csv_logger]
+    callbacks = [early_stopping, csv_logger, tensorboard]
+
+    # Ensure the directory exists or is created during the training process
+    if not os.path.exists(tensorboard_log_dir):
+        os.makedirs(tensorboard_log_dir)
 
     if learning_rate_scheduler:
         lr_scheduler = LearningRateScheduler(lr_schedule)
@@ -103,7 +108,7 @@ def run_experiment(
             steps_per_epoch=int(len(train_images) / batch_size),
             epochs=epochs,
             validation_data=test_batches,
-            callbacks=[early_stopping, csv_logger]
+            callbacks=callbacks
         )
     else:
         history = model.fit(
@@ -111,7 +116,7 @@ def run_experiment(
             epochs=epochs,
             batch_size=batch_size,
             validation_data=test_batches,
-            callbacks=[early_stopping, csv_logger]
+            callbacks=callbacks
         )
 
     pd.DataFrame(history.history).to_csv(history_csv_file, index=False)
@@ -151,6 +156,23 @@ def run_experiment(
         if file.tell() == 0:
             writer.writeheader()
         writer.writerow(run_details)
+
+        # Check if the directory exists and list its contents
+        log_dir = str(tensorboard_log_dir)
+        if os.path.exists(log_dir):
+            print(f"Directory '{log_dir}' exists.")
+
+            # List all files in the directory
+            files = os.listdir(log_dir)
+
+            if files:
+                print(f"Log files in '{log_dir}':")
+                for file in files:
+                    print(file)
+            else:
+                print(f"No log files found in '{log_dir}'.")
+        else:
+            print(f"Directory '{log_dir}' does not exist.")
 
 
 if __name__ == '__main__':
