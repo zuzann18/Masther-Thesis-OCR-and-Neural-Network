@@ -100,10 +100,13 @@
 # Kolejność :  na początku bez augumentacji,maskowanie w celu generalizacji modelu, potem z augumentacją,
 
 # TO DO
- -[] # ?Kolejność :  na początku bez augumentacji,maskowanie w celu generalizacji modelu, potem z augumentacją,
+
+- [] dodać tensorboard, dlaczego nie widzę tensorboard log directory ?
+- [] co z tymi layers, jak mogę dodać budowę modelu z model do raportu
+  -[] # ?Kolejność :  na początku bez augumentacji,maskowanie w celu generalizacji modelu, potem z augumentacją,
 
 - [] sprawdzic jaka wartość po 60 epokach dla learning_rate_scheduler
-- [] dodać tensorboard
+-
 - [] zacząć opisywać eksperymenty w pracy magisterskiej z droputem
 - raport md
 
