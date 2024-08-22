@@ -14,15 +14,9 @@ AVAILABLE_OPTIMIZERS = {
     'rmsprop': RMSprop,
     'adam': Adam,
 }
-# def resnet_block(input_tensor, filters, kernel_size):
-#     x = Conv2D(filters, kernel_size, padding='same', activation='relu')(input_tensor)
-#     x = BatchNormalization()(x)
-#     x = Conv2D(filters, kernel_size, padding='same', activation=None)(x)
-#     x = BatchNormalization()(x)
-#     x = Add()([x, input_tensor])
-#     x = Activation('relu')(x)
-#     return x
-def get_model(model_name, dropout_rate, learning_rate, optimizer, augmentation):
+
+
+def get_model(model_name, dropout_rate, learning_rate, optimizer, augmentation, num_layers=3):
     """
     Retrieve a Sequential model based on model_name
 
@@ -36,27 +30,6 @@ def get_model(model_name, dropout_rate, learning_rate, optimizer, augmentation):
     - model = get_model('SimpleCNN')
 
     """
-    # if model_name == 'ResNetSimple':
-    #     inputs = Input(shape=INPUT_SHAPE)
-    #     x = Conv2D(32, (3, 3), activation='relu', padding='same')(inputs)
-    #     x = BatchNormalization()(x)
-    #     x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
-    #     x = BatchNormalization()(x)
-    #     x = MaxPooling2D(pool_size=(2, 2))(x)
-    #
-    #     x = resnet_block(x, 32, (3, 3))
-    #     x = resnet_block(x, 32, (3, 3))
-    #
-    #     x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
-    #     x = BatchNormalization()(x)
-    #     x = MaxPooling2D(pool_size=(2, 2))(x)
-    #     x = Flatten()(x)
-    #     x = Dense(128, activation='relu')(x)
-    #     x = Dropout(rate=dropout_rate)(x)
-    #     outputs = Dense(NUM_CLASSES, activation='softmax')(x)
-    #
-    #     model = Sequential(inputs=inputs, outputs=outputs)
-    # else:
     MODELS_CONFIG = {
         'DNN1': Sequential([
             Flatten(input_shape=INPUT_SHAPE),
@@ -192,7 +165,7 @@ def get_model(model_name, dropout_rate, learning_rate, optimizer, augmentation):
     assert model_name in MODELS_CONFIG.keys(), f"Unknown model name: {model_name}, choose one of {MODELS_CONFIG.keys()}"
     model = MODELS_CONFIG[model_name]
     assert optimizer in AVAILABLE_OPTIMIZERS.keys(), f"Unknown optimizer: {optimizer}, choose one of {AVAILABLE_OPTIMIZERS.keys()}"
-    #Transfer learning????
+    # Transfer learning?
     # if model_name == 'VGG16':
     #     base_model = VGG16(include_top=False, input_shape=INPUT_SHAPE, weights='imagenet')
     #     x = base_model.output
@@ -204,16 +177,8 @@ def get_model(model_name, dropout_rate, learning_rate, optimizer, augmentation):
     # else:
     #     model = MODELS_CONFIG[model_name]
 
-    optimizer_obj = AVAILABLE_OPTIMIZERS[optimizer](learning_rate=learning_rate)
 
-    model.compile(
-        loss='categorical_crossentropy',
-        optimizer=optimizer_obj,
-        metrics=['accuracy']
-    )
-    return model
     optimizer_obj = AVAILABLE_OPTIMIZERS[optimizer](learning_rate=learning_rate)
-
     model.compile(
         loss='categorical_crossentropy',
         optimizer=optimizer_obj,
