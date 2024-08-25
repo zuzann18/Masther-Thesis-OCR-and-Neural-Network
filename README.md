@@ -23,12 +23,104 @@ W pracy wykorzystuję język programowania Python, biblioteki do przetwarzania o
 Głównym elementem mojej pracy jest projektowanie, implementacja i trening sieci neuronowych z użyciem różnorodnych architektur, takich jak konwolucyjne sieci neuronowe (CNN), które są szczególnie przydatne w rozpoznawaniu wzorców wizualnych.
 
 **Struktura pracy**:
-- Wstęp: przedstawienie motywacji oraz znaczenia biznesowego projektu, definicja celów i hipotez, metodologia.
-- Rozdział I: Przegląd teoretycznych podstaw SSN oraz technik rozpoznawania wzorców.
-- Rozdział II: Opis realizacji modeli SSN, w tym wyboru architektury i procesu treningu.
-- Rozdział III: Prezentacja i analiza wyników rozpoznawania znaków na różnych matrycach oraz pisma odręcznego.
-- Rozdział IV: Dyskusja nad potencjalnymi korzyściami biznesowymi wynikającymi z zastosowania SSN w rozpoznawaniu pisma ręcznego i wnioski końcowe.
-Praca w pythonie. 
+Wstęp
+
+1.1. Cel i Zakres Pracy
+Opis celów i zakresu pracy dyplomowej.
+1.2. Przegląd Technologii OCR i Sieci Neuronowych
+Przegląd technologii OCR oraz sieci neuronowych.
+1.3. Przegląd Literatury
+Przegląd literatury podsumowujący kluczowe badania i osiągnięcia.
+Rozdział I: Rozpoznawanie Wzorców i OCR
+
+2.1. Wprowadzenie do Rozpoznawania Wzorców
+Wprowadzenie do pojęcia rozpoznawania wzorców.
+2.2. Historia i Rozwój OCR
+Historia rozwoju i ewolucji technologii OCR.
+2.3. Zastosowania OCR
+Praktyczne zastosowania OCR w różnych dziedzinach.
+2.4. Techniki Przetwarzania Obrazów w OCR
+Techniki przetwarzania obrazów stosowane w OCR.
+2.4.1. Ekstrakcja Cech
+Metody ekstrakcji cech w OCR.
+2.4.2. Klasyfikacja
+Techniki klasyfikacji znaków.
+2.4.3. Narzędzia i Biblioteki OCR
+Przegląd narzędzi i bibliotek wykorzystywanych w rozwoju OCR.
+2.5. Intelligent Character Recognition (ICR)
+Zaawansowane techniki OCR i inteligentne rozpoznawanie znaków.
+2.5.1. Zastosowanie ICR
+Zastosowania i przypadki użycia ICR.
+2.5.2. Trendy w Rozwoju Technologii ICR
+Aktualne trendy i przyszłe kierunki rozwoju technologii ICR.
+Rozdział II: Sieci Neuronowe w OCR
+
+3.1. Wprowadzenie do Sieci Neuronowych
+Wprowadzenie do sieci neuronowych i ich roli w OCR.
+3.2. Konwolucyjne Sieci Neuronowe (CNN)
+Szczegółowe omówienie konwolucyjnych sieci neuronowych w OCR.
+3.2.1. Architektura CNN
+Architektura CNN i zasady projektowania.
+3.2.2. Zastosowanie Małych Filtów Konwolucyjnych
+Wykorzystanie małych filtrów konwolucyjnych w CNN do OCR.
+3.3. Skuteczność Technik w OCR
+Ocena technik poprawiających wydajność OCR.
+3.3.1. Augmentacja Danych
+Techniki augmentacji danych dla poprawy dokładności OCR.
+3.3.2. Metody Ansamblowe
+Metody ansamblowe w modelach OCR.
+3.3.3. Porównanie z Innymi Modelami
+Porównanie CNN z innymi modelami OCR.
+3.4. Przykłady Implementacji Sieci Neuronowych w OCR
+Studium przypadków i przykłady implementacji sieci neuronowych w systemach OCR.
+Rozdział III: Projektowanie i Budowa Sieci Neuronowych
+
+4.1. Szerokie i Głębokie Sieci Neuronowe
+Projektowanie i rozwój szerokich i głębokich sieci neuronowych.
+4.2. Unikanie Overfittingu
+Strategie zapobiegania overfittingowi w sieciach neuronowych.
+4.3. Funkcje Aktywacji
+Przegląd funkcji aktywacji używanych w sieciach neuronowych.
+4.4. Warstwy Strided Convolution
+Wprowadzenie do warstw strided convolution i ich zalet.
+4.4.1. Zachowanie Detali i Efektywność Pamięciowa
+Równowaga między zachowaniem detali a efektywnością pamięciową.
+4.4.2. Szybkość i Dokładność
+Kompromis między szybkością a dokładnością w projektowaniu sieci.
+4.4.3. Optymalna Konfiguracja Warstw
+Wytyczne dotyczące optymalnej konfiguracji warstw w sieciach neuronowych.
+Rozdział IV: Proces Trenowania Sztucznej Sieci Neuronowej
+
+5.1. Przygotowanie Środowiska
+Przygotowanie środowiska do trenowania sieci neuronowej.
+5.1.1. Konfiguracja Środowiska Wirtualnego
+Kroki konfiguracji środowiska wirtualnego.
+5.1.2. Narzędzia i Biblioteki
+Podstawowe narzędzia i biblioteki do rozwoju sieci neuronowych.
+5.2. Budowa Sieci Neuronowej przy Użyciu TensorFlow
+Budowa sieci neuronowej z użyciem TensorFlow.
+5.2.1. Zbiór Danych
+Wybór i przygotowanie zbioru danych do trenowania.
+5.2.2. Konstrukcja Sieci
+Budowa sieci i projektowanie modelu.
+5.3. Funkcje Aktywacji
+Głębsza analiza funkcji aktywacji stosowanych w modelach OCR.
+5.3.1. ReLU
+Rola funkcji ReLU w głębokim uczeniu.
+5.3.2. Softmax
+Zrozumienie funkcji Softmax w zadaniach klasyfikacyjnych.
+5.4. Warstwy i Ich Funkcje
+Analiza różnych warstw sieci i ich roli w OCR.
+Zakończenie
+
+6.1. Podsumowanie Wyników
+Podsumowanie wyników badań zawartych w pracy.
+6.2. Wnioski i Kierunki Przyszłych Badań
+Wnioski końcowe i sugerowane kierunki przyszłych badań.
+Literatura
+
+Kompleksowa lista źródeł wykorzystanych w pracy.
+
 -
 
 # Download data
