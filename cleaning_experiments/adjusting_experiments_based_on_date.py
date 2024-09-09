@@ -12,6 +12,11 @@ for filename in os.listdir(results_dir):
     file_path = results_dir / filename
     # Check if it's a file or a directory (in the case of TensorBoard logs)
     if file_path.is_dir() or file_path.is_file():
+        # Exclude 'runs_history.csv' from being moved
+        if filename == 'runs_history.csv':
+            print(f"Skipping file: {filename} (runs_history.csv is excluded)")
+            continue  # Skip the rest of the loop for this file
+        
         # Check if it's tensorboard_logs or a .csv file
         if filename.startswith('tensorboard_logs') or filename.endswith('.csv'):
             print(f"Processing file: {filename}")  # Add logging to see which files are being processed
@@ -26,6 +31,5 @@ for filename in os.listdir(results_dir):
         print(f"Not a valid file or directory: {filename}")
 
 print("Proces zakończony.")
-
 
 
