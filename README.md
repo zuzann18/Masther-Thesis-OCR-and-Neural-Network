@@ -22,14 +22,6 @@ W pracy wykorzystuję język programowania Python, biblioteki do przetwarzania o
 5. **Algorytmy/ modele**:
 Głównym elementem mojej pracy jest projektowanie, implementacja i trening sieci neuronowych z użyciem różnorodnych architektur, takich jak konwolucyjne sieci neuronowe (CNN), które są szczególnie przydatne w rozpoznawaniu wzorców wizualnych.
 
-**Struktura pracy**:
-- Wstęp: przedstawienie motywacji oraz znaczenia biznesowego projektu, definicja celów i hipotez, metodologia.
-- Rozdział I: Przegląd teoretycznych podstaw SSN oraz technik rozpoznawania wzorców.
-- Rozdział II: Opis realizacji modeli SSN, w tym wyboru architektury i procesu treningu.
-- Rozdział III: Prezentacja i analiza wyników rozpoznawania znaków na różnych matrycach oraz pisma odręcznego.
-- Rozdział IV: Dyskusja nad potencjalnymi korzyściami biznesowymi wynikającymi z zastosowania SSN w rozpoznawaniu pisma ręcznego i wnioski końcowe.
-Praca w pythonie. 
--
 
 # Download data
 
