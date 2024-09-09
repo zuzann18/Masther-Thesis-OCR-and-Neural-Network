@@ -2,9 +2,7 @@ import csv
 from datetime import datetime
 import click
 import pandas as pd
-from keras.callbacks import CSVLogger
-from keras.src.callbacks import EarlyStopping
-from tensorflow.keras.callbacks import LearningRateScheduler, TensorBoard
+from keras.callbacks import CSVLogger, EarlyStopping, LearningRateScheduler, TensorBoard
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from constants import RESULTS_PATH
 from data_processing import load_training_test_data
@@ -52,32 +50,32 @@ def run_experiment(
         width_shift_range=0.2,
         height_shift_range=0.2,
         shear_range=0.2,
-        learning_rate_scheduler=False,
-        num_layers=None
+        learning_rate_scheduler=None,
+        extra_layers=None,
+        num_residual_blocks=None
 ):
     print(f"{augmentation=}")
     print(f"{dropout_rate=}")
     print(f"{experiment_id=}")
     print(f"{model_name=}")
 
-    # start measuring time
     start_time = datetime.now()
     train_images, test_images, train_labels, test_labels = load_training_test_data()
-    test_batches = test_images, test_labels
+    test_batches = (test_images, test_labels)
     model = get_model(
         model_name=model_name,
         dropout_rate=dropout_rate,
         learning_rate=learning_rate,
         optimizer=optimizer,
         augmentation=augmentation,
-        num_layers=num_layers if num_layers is not None else 5
+        extra_layers=extra_layers,
+        num_residual_blocks=num_residual_blocks
     )
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     history_csv_file = RESULTS_PATH / f"training_history_{experiment_id}_{timestamp}.csv"
-    tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}.csv"
+    tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}"
 
-    # Initialize callbacks
     early_stopping = EarlyStopping(monitor='val_loss', patience=8)
     csv_logger = CSVLogger(history_csv_file)
     tensorboard = TensorBoard(log_dir=tensorboard_log_dir)
@@ -91,7 +89,24 @@ def run_experiment(
     run_tensorboard(tensorboard_log_dir)
 
     if learning_rate_scheduler:
-        lr_scheduler = LearningRateScheduler(lr_schedule)
+        if learning_rate_scheduler['type'] == "ReduceLROnPlateau":
+            lr_scheduler = ReduceLROnPlateau(
+                monitor=learning_rate_scheduler.get("monitor", "val_loss"),
+                factor=learning_rate_scheduler.get("factor", 0.1),
+                patience=learning_rate_scheduler.get("patience", 5),
+                min_lr=learning_rate_scheduler.get("min_lr", 1e-6)
+            )
+        elif learning_rate_scheduler['type'] == "ExponentialDecay":
+            initial_lr = learning_rate_scheduler.get("initial_learning_rate", 0.001)
+            decay_steps = learning_rate_scheduler.get("decay_steps", 10000)
+            decay_rate = learning_rate_scheduler.get("decay_rate", 0.96)
+            staircase = learning_rate_scheduler.get("staircase", True)
+
+            def exponential_decay_schedule(epoch, lr):
+                return initial_lr * (decay_rate ** (epoch // decay_steps))
+
+            lr_scheduler = LearningRateScheduler(exponential_decay_schedule)
+
         callbacks.append(lr_scheduler)
 
     if augmentation:
@@ -149,8 +164,9 @@ def run_experiment(
         'best_train_loss': best_train_loss,
         'best_val_loss': best_val_loss,
         'history_csv_file': history_csv_file,
-        'num_layers': num_layers,
-        'tensorboard_log_dir': tensorboard_log_dir
+        'tensorboard_log_dir': tensorboard_log_dir,
+        'extra_layers': extra_layers,
+        'num_residual_blocks': num_residual_blocks
     }
     result_path = RESULTS_PATH / f"runs_history.csv"
 

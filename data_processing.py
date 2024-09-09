@@ -21,7 +21,6 @@ def load_dataset(dataset: str):
     images = np.load(dataset_path / 'images.npy')
     labels = np.load(dataset_path / 'labels.npy')
 
-    # TODO: normalization
     images = images.astype('float32') / 255.0
     return images, labels
 

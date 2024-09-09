@@ -74,7 +74,6 @@ def generate_report(output_dir):
   - **Width Shift Range**: {run_details['width_shift_range']}
   - **Height Shift Range**: {run_details['height_shift_range']}
   - **Shear Range**: {run_details['shear_range']}
-- **Number of Layers**: {run_details['num_layers']}
 - **Total Seconds**: {run_details['total_seconds']}
 
 ## Metrics

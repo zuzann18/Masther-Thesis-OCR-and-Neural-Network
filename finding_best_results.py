@@ -4,6 +4,22 @@ import matplotlib.pyplot as plt
 from models import get_model
 
 
+import csv
+
+def debug_csv_file(file_path, expected_columns):
+    with open(file_path, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        header = next(reader)
+        num_columns = len(header)
+        print(f"Oczekujemy kolumn: {num_columns}")
+
+        for i, row in enumerate(reader, start=2):
+            if len(row) != num_columns:
+                print(f"Problem linia {i}. Oczekjemy {num_columns} kolumn, ale mamy {len(row)}")
+                print(f"Zawartość linii: {row}")
+                
+csv_file_path = 'results/runs_history.csv'
+debug_csv_file(csv_file_path, expected_columns=18)
 def find_latest_history_csv(results_dir):
     csv_files = [f for f in os.listdir(results_dir) if f.startswith('training_history') and f.endswith('.csv')]
     latest_file = max(csv_files, key=lambda x: os.path.getctime(os.path.join(results_dir, x)))
@@ -62,7 +78,6 @@ def generate_report(output_dir):
         learning_rate=run_details['learning_rate'],
         optimizer=run_details['optimizer'],
         augmentation=run_details['augmentation'],
-        num_layers=run_details['num_layers']
     )
     model_summary = []
     model.summary(print_fn=lambda x: model_summary.append(x))
@@ -86,7 +101,6 @@ def generate_report(output_dir):
   - **Width Shift Range**: {run_details['width_shift_range']}
   - **Height Shift Range**: {run_details['height_shift_range']}
   - **Shear Range**: {run_details['shear_range']}
-- **Number of Layers**: {run_details['num_layers']}
 - **Total Seconds**: {run_details['total_seconds']}
 
 ## Model Architecture
