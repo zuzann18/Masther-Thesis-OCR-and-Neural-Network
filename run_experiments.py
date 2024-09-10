@@ -159,15 +159,20 @@ def run_experiment(
         'optimizer': optimizer,
         'augmentation': augmentation,
         'zoom_range': zoom_range,
+        'rotation_range': rotation_range,
+        'width_shift_range': width_shift_range,
+        'height_shift_range': height_shift_range,
+        'shear_range': shear_range,
+        'learning_rate_scheduler': learning_rate_scheduler,
+        'extra_layers': extra_layers,
+        'num_residual_blocks': num_residual_blocks,
         'total_seconds': total_seconds,
         'best_train_accuracy': best_train_accuracy,
         'best_val_accuracy': best_val_accuracy,
         'best_train_loss': best_train_loss,
         'best_val_loss': best_val_loss,
         'history_csv_file': history_csv_file,
-        'tensorboard_log_dir': tensorboard_log_dir,
-        'extra_layers': extra_layers,
-        'num_residual_blocks': num_residual_blocks
+        'tensorboard_log_dir': tensorboard_log_dir
 
     }
     result_path = RESULTS_PATH / f"runs_history.csv"
