@@ -158,7 +158,7 @@ def run_experiment(
         'learning_rate': learning_rate,
         'optimizer': optimizer,
         'augmentation': augmentation,
-        'zoom_range': zoom_range
+        'zoom_range': zoom_range,
         'total_seconds': total_seconds,
         'best_train_accuracy': best_train_accuracy,
         'best_val_accuracy': best_val_accuracy,
