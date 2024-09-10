@@ -158,6 +158,7 @@ def run_experiment(
         'learning_rate': learning_rate,
         'optimizer': optimizer,
         'augmentation': augmentation,
+        'zoom_range': zoom_range
         'total_seconds': total_seconds,
         'best_train_accuracy': best_train_accuracy,
         'best_val_accuracy': best_val_accuracy,
@@ -167,6 +168,7 @@ def run_experiment(
         'tensorboard_log_dir': tensorboard_log_dir,
         'extra_layers': extra_layers,
         'num_residual_blocks': num_residual_blocks
+
     }
     result_path = RESULTS_PATH / f"runs_history.csv"
 

@@ -2,7 +2,7 @@ import subprocess
 from experimental_config import EXPERIMENTAL_CONFIG
 
 
-def run_all_experiments(start_id=20, experiment_ids=None):
+def run_all_experiments(start_id=55, experiment_ids=None):
     if experiment_ids is not None:
         configs_to_run = [config for config in EXPERIMENTAL_CONFIG if config['experiment_id'] in experiment_ids]
     else:
@@ -10,7 +10,7 @@ def run_all_experiments(start_id=20, experiment_ids=None):
 
     for config in configs_to_run:
         experiment_id = config['experiment_id']
-        epochs = config.get('epochs', 350)  # Default to 350 epochs if not specified
+        epochs = config.get('epochs', 1)  # Default to 350 epochs if not specified
         try:
             subprocess.run(
                 ['python', 'run_experiments.py', '--experiment_id', str(experiment_id), '--epochs', str(epochs)],
