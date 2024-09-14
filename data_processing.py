@@ -13,6 +13,8 @@ def load_dataset(dataset: str):
 
     Returns:
     - training/testing data ((train_images, train_labels), (test_images, test_labels))
+    - images (numpy array): Array of images.
+    - labels (numpy array): Array of labels.
     """
 
     available_datasets = ['small', 'big']
