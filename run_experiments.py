@@ -10,6 +10,8 @@ from experimental_config import EXPERIMENTAL_CONFIG
 from models import get_model
 import os
 import subprocess
+import xgboost as xgb
+from sklearn.metrics import accuracy_score
 
 def lr_schedule(epoch, lr):
     if epoch > 10:
@@ -62,126 +64,150 @@ def run_experiment(
     start_time = datetime.now()
     train_images, test_images, train_labels, test_labels = load_training_test_data()
     test_batches = (test_images, test_labels)
-    model = get_model(
-        model_name=model_name,
-        dropout_rate=dropout_rate,
-        learning_rate=learning_rate,
-        optimizer=optimizer,
-        augmentation=augmentation,
-        extra_layers=extra_layers,
-        num_residual_blocks=num_residual_blocks
-    )
 
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    history_csv_file = RESULTS_PATH / f"training_history_{experiment_id}_{timestamp}.csv"
-    tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}"
+    if model_name == 'xgboost':
+        # Flatten the images
+        x_train_flat = train_images.reshape(train_images.shape[0], -1)
+        x_test_flat = test_images.reshape(test_images.shape[0], -1)
 
-    early_stopping = EarlyStopping(monitor='val_loss', patience=8)
-    csv_logger = CSVLogger(history_csv_file)
-    tensorboard = TensorBoard(log_dir=tensorboard_log_dir)
-    callbacks = [early_stopping, csv_logger, tensorboard]
+        # Convert to DMatrix
+        dtrain = xgb.DMatrix(x_train_flat, label=train_labels.argmax(axis=1))
+        dtest = xgb.DMatrix(x_test_flat, label=test_labels.argmax(axis=1))
 
-    # Ensure the directory exists or is created during the training process
-    if not os.path.exists(tensorboard_log_dir):
-        os.makedirs(tensorboard_log_dir)
+        # Set parameters
+        params = {
+            'objective': 'multi:softmax',
+            'num_class': 10,
+            'eval_metric': 'mlogloss',
+            'learning_rate': learning_rate
+        }
 
-    # Start TensorBoard before model training
-    run_tensorboard(tensorboard_log_dir)
+        # Train model
+        bst = xgb.train(params, dtrain, num_boost_round=100)
 
-    if learning_rate_scheduler:
-        if learning_rate_scheduler['type'] == "ReduceLROnPlateau":
-            lr_scheduler = ReduceLROnPlateau(
-                monitor=learning_rate_scheduler.get("monitor", "val_loss"),
-                factor=learning_rate_scheduler.get("factor", 0.1),
-                patience=learning_rate_scheduler.get("patience", 5),
-                min_lr=learning_rate_scheduler.get("min_lr", 1e-6)
-            )
-        elif learning_rate_scheduler['type'] == "ExponentialDecay":
-            initial_lr = learning_rate_scheduler.get("initial_learning_rate", 0.001)
-            decay_steps = learning_rate_scheduler.get("decay_steps", 10000)
-            decay_rate = learning_rate_scheduler.get("decay_rate", 0.96)
-            staircase = learning_rate_scheduler.get("staircase", True)
+        # Predict
+        y_pred = bst.predict(dtest)
+        accuracy = accuracy_score(test_labels.argmax(axis=1), y_pred)
+        print(f'XGBoost Accuracy: {accuracy}')
 
-            def exponential_decay_schedule(epoch, lr):
-                return initial_lr * (decay_rate ** (epoch // decay_steps))
+        # Save results
+        run_details = {
+            'experiment_id': experiment_id,
+            'timestamp': datetime.now().strftime("%Y%m%d-%H%M%S"),
+            'model_name': model_name,
+            'accuracy': accuracy
+        }
 
-            lr_scheduler = LearningRateScheduler(exponential_decay_schedule)
+        result_path = RESULTS_PATH / f"runs_history.csv"
+        file_exists = os.path.isfile(result_path)
+        with open(result_path, 'a', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=run_details.keys())
+            if not file_exists or os.stat(result_path).st_size == 0:
+                writer.writeheader()
+            writer.writerow(run_details)
 
-        callbacks.append(lr_scheduler)
-
-    if augmentation:
-        print("Data augmentation enabled")
-        datagen = ImageDataGenerator(
-            rotation_range=rotation_range,
-            width_shift_range=width_shift_range,
-            height_shift_range=height_shift_range,
-            horizontal_flip=False,
-            vertical_flip=False,
-            zoom_range=zoom_range,
-            shear_range=shear_range,
-            fill_mode='nearest'
+    else:
+        model = get_model(
+            model_name=model_name,
+            dropout_rate=dropout_rate,
+            learning_rate=learning_rate,
+            optimizer=optimizer,
+            augmentation=augmentation,
+            extra_layers=extra_layers,
+            num_residual_blocks=num_residual_blocks
         )
-        train_data = datagen.flow(train_images, train_labels, batch_size=batch_size)
+
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        history_csv_file = RESULTS_PATH / f"training_history_{experiment_id}_{timestamp}.csv"
+        tensorboard_log_dir = RESULTS_PATH / f"tensorboard_logs_{experiment_id}_{timestamp}"
+
+        early_stopping = EarlyStopping(monitor='val_loss', patience=8)
+        csv_logger = CSVLogger(history_csv_file)
+        tensorboard = TensorBoard(log_dir=tensorboard_log_dir)
+        callbacks = [early_stopping, csv_logger, tensorboard]
+
+        # Ensure the directory exists or is created during the training process
+        if not os.path.exists(tensorboard_log_dir):
+            os.makedirs(tensorboard_log_dir)
+
+        # Start TensorBoard before model training
+        run_tensorboard(tensorboard_log_dir)
+
+        if learning_rate_scheduler:
+            if learning_rate_scheduler['type'] == "ReduceLROnPlateau":
+                lr_scheduler = LearningRateScheduler(lr_schedule)
+            elif learning_rate_scheduler['type'] == "ExponentialDecay":
+                lr_scheduler = LearningRateScheduler(lr_schedule)
+
+            callbacks.append(lr_scheduler)
+
+        if augmentation:
+            print("Data augmentation enabled")
+            datagen = ImageDataGenerator(
+                rotation_range=rotation_range,
+                width_shift_range=width_shift_range,
+                height_shift_range=height_shift_range,
+                horizontal_flip=False,
+                vertical_flip=False,
+                zoom_range=zoom_range,
+                shear_range=shear_range,
+                fill_mode='nearest'
+            )
+            train_data = datagen.flow(train_images, train_labels, batch_size=batch_size)
+        else:
+            train_data = (train_images, train_labels)
+
         history = model.fit(
             train_data,
-            steps_per_epoch=int(len(train_images) / batch_size),
             epochs=epochs,
             validation_data=test_batches,
             callbacks=callbacks
         )
-    else:
-        history = model.fit(
-            train_images, train_labels,
-            epochs=epochs,
-            batch_size=batch_size,
-            validation_data=test_batches,
-            callbacks=callbacks
-        )
 
-    pd.DataFrame(history.history).to_csv(history_csv_file, index=False)
+        pd.DataFrame(history.history).to_csv(history_csv_file, index=False)
 
-    total_seconds = (datetime.now() - start_time).total_seconds()
-    actual_epochs = len(history.history['loss'])
-    best_train_accuracy = max(history.history['accuracy'])
-    best_val_accuracy = max(history.history['val_accuracy'])
-    best_train_loss = min(history.history['loss'])
-    best_val_loss = min(history.history['val_loss'])
+        total_seconds = (datetime.now() - start_time).total_seconds()
+        actual_epochs = len(history.history['loss'])
+        best_train_accuracy = max(history.history['accuracy'])
+        best_val_accuracy = max(history.history['val_accuracy'])
+        best_train_loss = min(history.history['loss'])
+        best_val_loss = min(history.history['val_loss'])
 
-    run_details = {
-        'experiment_id': experiment_id,
-        'timestamp': timestamp,
-        'model_name': model_name,
-        'epochs': epochs,
-        'actual_epochs': actual_epochs,
-        'batch_size': batch_size,
-        'dropout_rate': dropout_rate,
-        'learning_rate': learning_rate,
-        'optimizer': optimizer,
-        'augmentation': augmentation,
-        'zoom_range': zoom_range,
-        'rotation_range': rotation_range,
-        'width_shift_range': width_shift_range,
-        'height_shift_range': height_shift_range,
-        'shear_range': shear_range,
-        'learning_rate_scheduler': learning_rate_scheduler,
-        'extra_layers': extra_layers,
-        'num_residual_blocks': num_residual_blocks,
-        'total_seconds': total_seconds,
-        'best_train_accuracy': best_train_accuracy,
-        'best_val_accuracy': best_val_accuracy,
-        'best_train_loss': best_train_loss,
-        'best_val_loss': best_val_loss,
-        'history_csv_file': history_csv_file,
-        'tensorboard_log_dir': tensorboard_log_dir
+        run_details = {
+            'experiment_id': experiment_id,
+            'timestamp': timestamp,
+            'model_name': model_name,
+            'epochs': epochs,
+            'actual_epochs': actual_epochs,
+            'batch_size': batch_size,
+            'dropout_rate': dropout_rate,
+            'learning_rate': learning_rate,
+            'optimizer': optimizer,
+            'augmentation': augmentation,
+            'zoom_range': zoom_range,
+            'rotation_range': rotation_range,
+            'width_shift_range': width_shift_range,
+            'height_shift_range': height_shift_range,
+            'shear_range': shear_range,
+            'learning_rate_scheduler': learning_rate_scheduler,
+            'extra_layers': extra_layers,
+            'num_residual_blocks': num_residual_blocks,
+            'total_seconds': total_seconds,
+            'best_train_accuracy': best_train_accuracy,
+            'best_val_accuracy': best_val_accuracy,
+            'best_train_loss': best_train_loss,
+            'best_val_loss': best_val_loss,
+            'history_csv_file': history_csv_file,
+            'tensorboard_log_dir': tensorboard_log_dir
+        }
 
-    }
-    result_path = RESULTS_PATH / f"runs_history.csv"
-
-    with open(result_path, 'a', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=run_details.keys())
-        if file.tell() == 0:
-            writer.writeheader()
-        writer.writerow(run_details)
+        result_path = RESULTS_PATH / f"runs_history.csv"
+        file_exists = os.path.isfile(result_path)
+        with open(result_path, 'a', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=run_details.keys())
+            if not file_exists or os.stat(result_path).st_size == 0:
+                writer.writeheader()
+            writer.writerow(run_details)
 
         # Check if the directory exists and list its contents
         log_dir = str(tensorboard_log_dir)

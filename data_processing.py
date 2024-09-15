@@ -1,22 +1,20 @@
-import numpy as np
 import os
+import numpy as np
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from constants import DATA_PATH
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 def load_dataset(dataset: str):
     """
-    Loads dataset
+    Loads dataset.
 
     Parameters:
     - dataset (str): The name of the dataset to load.
 
     Returns:
-    - training/testing data ((train_images, train_labels), (test_images, test_labels))
     - images (numpy array): Array of images.
     - labels (numpy array): Array of labels.
     """
-
     available_datasets = ['small', 'big']
     assert dataset in available_datasets, f"Dataset '{dataset}' should be one of {available_datasets}"
     dataset_path = DATA_PATH / dataset
@@ -41,32 +39,56 @@ def load_iam_dataset(level='words'):
     
     # Load different levels of data
     if level == 'words':
-        train_images = np.load(os.path.join(iam_data_path, 'preprocessed_words.npy'))
+        images = np.load(os.path.join(iam_data_path, 'preprocessed_words.npy'))
+        labels = np.load(os.path.join(iam_data_path, 'labels_words.npy'))
     elif level == 'lines':
-        train_images = np.load(os.path.join(iam_data_path, 'preprocessed_lines.npy'))
+        images = np.load(os.path.join(iam_data_path, 'preprocessed_lines.npy'))
+        labels = np.load(os.path.join(iam_data_path, 'labels_lines.npy'))
     elif level == 'sentences':
-        train_images = np.load(os.path.join(iam_data_path, 'preprocessed_sentences.npy'))
+        images = np.load(os.path.join(iam_data_path, 'preprocessed_sentences.npy'))
+        labels = np.load(os.path.join(iam_data_path, 'labels_sentences.npy'))
     elif level == 'forms':
-        train_images = np.load(os.path.join(iam_data_path, 'preprocessed_forms.npy'))
+        images = np.load(os.path.join(iam_data_path, 'preprocessed_forms.npy'))
+        labels = np.load(os.path.join(iam_data_path, 'labels_forms.npy'))
     else:
         raise ValueError("Invalid level! Choose from 'words', 'lines', 'sentences', 'forms'")
     
+    # Normalize images
+    images = images.astype('float32') / 255.0
+    
+    # Encode labels
+    label_encoder = LabelEncoder()
+    integer_encoded_labels = label_encoder.fit_transform(labels)
+    onehot_encoder = OneHotEncoder(sparse=False)
+    integer_encoded_labels = integer_encoded_labels.reshape(len(integer_encoded_labels), 1)
+    onehot_encoded_labels = onehot_encoder.fit_transform(integer_encoded_labels)
+    
     # For simplicity, splitting the data into 80% train and 20% test
-    split_idx = int(0.8 * len(train_images))
-    test_images = train_images[split_idx:]
-    train_images = train_images[:split_idx]
-
-    # Labels need to be processed similarly (this is a placeholder)
-    train_labels = np.zeros(len(train_images))  # Dummy labels, replace with actual label processing
-    test_labels = np.zeros(len(test_images))    # Dummy labels, replace with actual label processing
+    split_idx = int(0.8 * len(images))
+    train_images = images[:split_idx]
+    test_images = images[split_idx:]
+    train_labels = onehot_encoded_labels[:split_idx]
+    test_labels = onehot_encoded_labels[split_idx:]
 
     return train_images, test_images, train_labels, test_labels
 
-def load_training_test_data():
-    images_test, labels_test = load_dataset(dataset='small')
-    images_train, labels_train = load_dataset(dataset='big')
-    return images_train, images_test, labels_train, labels_test
+def load_training_test_data(dataset='small'):
+    """
+    Loads training and testing data for the specified dataset.
 
+    Parameters:
+    - dataset (str): The name of the dataset to load.
+
+    Returns:
+    - (train_images, test_images, train_labels, test_labels)
+    """
+    images, labels = load_dataset(dataset)
+    split_idx = int(0.8 * len(images))
+    train_images = images[:split_idx]
+    test_images = images[split_idx:]
+    train_labels = labels[:split_idx]
+    test_labels = labels[split_idx:]
+    return train_images, test_images, train_labels, test_labels
 def visualize_images(images, labels, num_samples=5):
     """
     Visualizes a few sample images and their labels.
@@ -93,3 +115,9 @@ if __name__ == '__main__':
     print("Sample training label:", labels_train[0])
     print("Sample testing image:", images_test[0])
     print("Sample testing label:", labels_test[0])
+if __name__ == '__main__':
+    train_images, test_images, train_labels, test_labels = load_training_test_data(dataset='small')
+    print(train_images.shape, test_images.shape, train_labels.shape, test_labels.shape)
+    
+    
+  
