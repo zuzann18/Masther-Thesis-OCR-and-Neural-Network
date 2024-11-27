@@ -6,7 +6,7 @@ Temat pracy :
 Celem pracy będzie rozpoznanie za pomocą Sztucznej sieci Neuronowej: 
 1)	liter utworzonych na matrycach 28 pikseli x 28 pikseli -  są wykorzystawane do zbioru testowego 
 2)	liter z bazy danych https://huggingface.co/datasets/pittawat/letter_recognition - są wykorzystywane do zbioru treningowego 
-3)  słów z bazy danych IAM Handwriting Database https://fki.tic.heia-fr.ch/databases/iam-handwriting-database
+
 
 1. **Opis problemu**:
 Moja praca magisterska koncentruje się na rozpoznawaniu wzorców znaków przy użyciu sztucznych sieci neuronowych (SSN). Zajmuję się opracowaniem i treningiem modeli SSN zdolnych do identyfikacji liter utworzonych na matrycach o różnych rozmiarach, a także rozpoznawaniem pisma odręcznego. Problemem biznesowym, który ten model ma rozwiązać, jest potrzeba efektywnego i automatycznego przetwarzania informacji wizualnych na dane cyfrowe, które mogą być łatwo przeszukiwane i analizowane przez systemy komputerowe.
@@ -119,7 +119,8 @@ Best result
 
 ![img.png](img.png)
 
-# Todo
+ Todo
+-słów z bazy danych IAM Handwriting Database https://fki.tic.heia-fr.ch/databases/iam-handwriting-database
 - train models
   - config_experiment
 - visualization/reporting
