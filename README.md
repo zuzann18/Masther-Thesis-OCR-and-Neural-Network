@@ -80,7 +80,9 @@ License
 This project is licensed under the MIT License.
 
 Acknowledgements
-Special thanks to the creators of the datasets and the open-source libraries used in this project.# Praca Magisterska
+Special thanks to the creators of the datasets and the open-source libraries used in this project.
+
+# Praca Magisterska
 
 Temat pracy : 
 "Analiza ropoznawania liter za pomocą sztucznych sieci neuronowych" 
