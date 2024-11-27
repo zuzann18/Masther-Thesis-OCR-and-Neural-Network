@@ -50,6 +50,8 @@ To download the data, run:
 
 ```bash
 python download_data.py
+```
+
 Running Experiments
 You can run experiments using the run_experiments.py script. Example:
 
