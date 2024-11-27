@@ -1,4 +1,86 @@
-# Praca Magisterska
+# Master's Thesis: OCR and Neural Networks
+
+**Title:** Analysis of Letter Recognition Using Artificial Neural Networks
+
+**Objective:** 
+To recognize letters using Artificial Neural Networks (ANN):
+1. Letters created on 28x28 pixel matrices - used for the test set.
+2. Letters from the dataset [HuggingFace Letter Recognition](https://huggingface.co/datasets/pittawat/letter_recognition) - used for the training set.
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Business Justification](#business-justification)
+3. [Research Hypothesis](#research-hypothesis)
+4. [Technologies Used](#technologies-used)
+5. [Algorithms/Models](#algorithmsmodels)
+6. [Data Download](#data-download)
+7. [Running Experiments](#running-experiments)
+8. [Monitoring Results](#monitoring-results)
+9. [Experiment Results](#experiment-results)
+10. [Contributing](#contributing)
+11. [License](#license)
+12. [Acknowledgements](#acknowledgements)
+
+## Introduction
+
+My master's thesis focuses on pattern recognition of characters using artificial neural networks (ANN). The goal is to develop and train ANN models capable of identifying various characters.
+
+## Business Justification
+
+Automating text recognition has broad applications across different industries. For example, in banking, it can automate check data entry; in medicine, digitize handwritten prescriptions; and in logistics, streamline address reading on packages.
+
+## Research Hypothesis
+
+The hypothesis to be verified is: "Artificial neural networks can effectively recognize character patterns and handwriting of different matrix sizes and writing styles, providing results comparable or superior to traditional OCR methods."
+
+## Technologies Used
+
+- **Programming Language:** Python
+- **Image Processing Libraries:** OpenCV
+- **Deep Learning Frameworks:** TensorFlow
+
+## Algorithms/Models
+
+The main focus is on designing, implementing, and training neural networks using various architectures, such as Convolutional Neural Networks (CNN), which are particularly useful for visual pattern recognition.
+
+## Data Download
+
+To download the data, run:
+
+```bash
+python download_data.py
+Running Experiments
+You can run experiments using the run_experiments.py script. Example:
+
+python run_experiments.py --experiment_id 0 --epochs 10
+After running the script, TensorBoard will automatically start and save logs in the directory results/tensorboard_logs_{experiment_id}_{timestamp}.
+
+Monitoring Results
+To monitor experiment results in real-time, open a terminal and run:
+
+tensorboard --logdir=results
+Then open your browser and go to http://localhost:6006/.
+
+Experiment Results
+DNN Experiments
+Experiment 0: python run_experiments.py --experiment_id 0 --epochs 50
+Conclusions: Test Acc: +-25%, learning but overfitting, EarlyStopping at epoch 34
+Experiment 1: python run_experiments.py --experiment_id 1 --epochs 50
+Conclusions: Test Acc: +-19%, overfitting at epoch 2/3, systematic loss difference between test and training sets, EarlyStopping at epoch 8
+CNN Experiments
+Experiment 2: python run_experiments.py --experiment_id 2 --epochs 50
+Test Acc: +-37%, Train Acc: +-74.5%, overfitting, systematic loss difference between test and training sets, EarlyStopping at epoch 8
+Experiment 3: python run_experiments.py --experiment_id 3 --epochs 50
+Test Acc: 39%, Train Acc: 80.8%, overfitting, systematic loss difference between test and training sets
+Contributing
+Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+
+License
+This project is licensed under the MIT License.
+
+Acknowledgements
+Special thanks to the creators of the datasets and the open-source libraries used in this project.# Praca Magisterska
 
 Temat pracy : 
 "Analiza ropoznawania liter za pomocą sztucznych sieci neuronowych" 
