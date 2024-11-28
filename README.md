@@ -69,7 +69,7 @@ Then open your browser and go to http://localhost:6006/.
 ### **Best Model and Results**
 
 The best model from the conducted experiments was **CNN4**, achieving the highest validation accuracy of **91.83%** and training accuracy of **94.79%**, with corresponding losses of **0.315 for validation** and **0.177 for training**.
-
+![img.png](img.png)
 #### **Key Aspects of CNN4 Architecture**
 
 **Layer Architecture**
@@ -211,11 +211,6 @@ The CNN4 model represents a well-balanced architecture, leveraging effective fea
     - **Validation Loss:** 3.2581
   - **Conclusion:** Kernel size of 5x5 is likely too large, leading to poor learning.
 
-- **Experiment 9:**
-  - **Configuration:** Runs for 350 epochs.
-  - **Outcome:** Pending results.
-
--
 
 License
 This project is licensed under the MIT License.
