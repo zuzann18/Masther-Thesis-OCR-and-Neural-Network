@@ -1,4 +1,4 @@
-# Master's Thesis: OCR and Neural Networks
+#  OCR and Neural Networks
 
 **Title:** Analysis of Letter Recognition Using Artificial Neural Networks
 
